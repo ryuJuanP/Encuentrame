@@ -9,16 +9,14 @@ const INITIAL_REGION = {
   longitudeDelta: 15,
 };
 
+const icon1 = require('../assets/images/ICONO1.png');
+
 const markers = [
   {
     id: 1,
-    title: 'Marker 1',
+    title: 'Marker',
     coordinate: {latitude: 23.6345, longitude: -102.5528},
-  },
-  {
-    id: 2,
-    title: 'Marker 2',
-    coordinate: {latitude: 23.634, longitude: -102.552},
+    icon: icon1,
   },
 ];
 
@@ -36,6 +34,7 @@ export default function Mapa() {
             key={marker.id}
             coordinate={marker.coordinate}
             title={marker.title}
+            icon={marker.icon}
           />
         ))}
       </MapView>
