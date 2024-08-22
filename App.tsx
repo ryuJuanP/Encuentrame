@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, TextInput} from 'react-native';
-import Mapa from './Views/mapa';
+import {View, TouchableOpacity, Text, TextInput, Image} from 'react-native';
+import Alerta from './Views/alerta';
 
 export default function App() {
-  const [mapa, setMapa] = useState(false);
+  const [alerta, setAlerta] = useState(false);
 
-  if (mapa) {
-    return <Mapa setMapa={setMapa} />;
+  if (alerta) {
+    return <Alerta setAlerta={setAlerta} />;
   }
   return (
     <View
@@ -17,22 +17,28 @@ export default function App() {
         alignItems: 'center',
       }}>
       <View>
-        <Text> e-mail </Text>
+        <Image
+          style={{height: 130, width: 350, marginBottom: '6%'}}
+          source={require('./assets/images/Diseños/ENCUENTRA_ME_LOGO_1.png')}
+        />
+        <Text style={{fontSize: 18, color: 'white'}}> Correo electronico </Text>
         <TextInput style={{backgroundColor: 'white', marginVertical: '4%'}} />
-        <Text>Contraseña</Text>
+        <Text style={{fontSize: 18, color: 'white'}}>Contraseña</Text>
         <TextInput style={{backgroundColor: 'white', marginVertical: '4%'}} />
-        <TouchableOpacity
-          onPress={() => setMapa(true)}
-          style={{
-            backgroundColor: '#ec8715',
-            padding: '7%',
-            borderRadius: 10,
-            marginTop: '5%',
-          }}>
-          <Text style={{color: 'white', fontSize: 18}}>
-            Activar alerta de extravío
-          </Text>
-        </TouchableOpacity>
+        <View style={{alignItems: 'center'}}>
+          <TouchableOpacity
+            onPress={() => setAlerta(true)}
+            style={{
+              backgroundColor: '#ec8715',
+              padding: '7%',
+              borderRadius: 10,
+              marginTop: '5%',
+            }}>
+            <Text style={{color: 'white', fontSize: 18, textAlign: 'center'}}>
+              Iniciar sesión
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

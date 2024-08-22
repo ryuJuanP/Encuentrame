@@ -15,7 +15,14 @@ const markers = [
   {
     id: 1,
     title: 'Marker',
-    coordinate: {latitude: 23.6345, longitude: -102.5528},
+    coordinate: {latitude: 20.7085, longitude: -103.3528},
+    icon: icon1,
+  },
+
+  {
+    id: 2,
+    title: 'Marker2',
+    coordinate: {latitude: 20.6345, longitude: -103.4128},
     icon: icon1,
   },
 ];
