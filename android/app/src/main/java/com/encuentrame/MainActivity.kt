@@ -1,4 +1,4 @@
-package com.encuentrame
+package com.encuentrame.app
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

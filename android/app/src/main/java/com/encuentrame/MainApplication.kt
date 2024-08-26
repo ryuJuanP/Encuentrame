@@ -1,4 +1,4 @@
-package com.encuentrame
+package com.encuentrame.app
 
 import android.app.Application
 import com.facebook.react.PackageList
