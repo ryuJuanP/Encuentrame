@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -7,6 +7,7 @@ import {
   Image,
   Alert,
   ImageBackground,
+  StatusBar,
 } from 'react-native';
 import axios from 'axios';
 import Alerta from './Views/alerta';
@@ -16,6 +17,22 @@ export default function App() {
   const [alerta, setAlerta] = useState(false);
   const [email, setEmail] = useState(''); // Estado para el correo electrónico
   const [password, setPassword] = useState(''); // Estado para la contraseña
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
+        if (loggedInStatus === 'true') {
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   const handleLogin = () => {
     const baseUrl = 'https://encuentra-me.com';
@@ -32,6 +49,7 @@ export default function App() {
             'device_id',
             response.data.marker.device_id,
           );
+          await AsyncStorage.setItem('isLoggedIn', 'true');
         } catch (error) {} // Cambia el estado para mostrar la vista de alerta
       })
       .catch(error => {
@@ -44,56 +62,63 @@ export default function App() {
     return <Alerta setAlerta={setAlerta} />;
   }
 
+  if (isLoggedIn) {
+    return <Alerta setAlerta={setAlerta} />; // Suponiendo que Alerta es la vista principal
+  }
+
   return (
-    <ImageBackground
-      style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-      source={require('./assets/images/fondo.jpg')}>
-      <View>
-        <Image
-          style={{height: 130, width: 350, marginBottom: '6%'}}
-          source={require('./assets/images/Diseños/ENCUENTRA_ME_LOGO_1.png')}
-        />
-        <Text style={{fontSize: 18, color: 'white'}}>Correo electrónico</Text>
-        <TextInput
-          style={{
-            backgroundColor: 'white',
-            marginVertical: '4%',
-            paddingHorizontal: 10,
-            color: 'black',
-            borderRadius: 15,
-          }}
-          onChangeText={text => setEmail(text)} // Actualiza el estado de correo
-          value={email}
-        />
-        <Text style={{fontSize: 18, color: 'white'}}>Contraseña</Text>
-        <TextInput
-          style={{
-            color: 'black',
-            backgroundColor: 'white',
-            marginVertical: '4%',
-            paddingHorizontal: 10,
-            borderRadius: 15,
-          }}
-          secureTextEntry
-          onChangeText={text => setPassword(text)} // Actualiza el estado de contraseña
-          value={password}
-        />
-        <View style={{alignItems: 'center'}}>
-          <TouchableOpacity
-            onPress={handleLogin} // Llama a handleLogin al presionar
+    <>
+      <StatusBar backgroundColor="#0d73ae" barStyle="light-content" />
+      <ImageBackground
+        style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+        source={require('./assets/images/fondo.jpg')}>
+        <View>
+          <Image
+            style={{height: 130, width: 350, marginBottom: '6%'}}
+            source={require('./assets/images/Diseños/ENCUENTRA_ME_LOGO_1.png')}
+          />
+          <Text style={{fontSize: 18, color: 'white'}}>Correo electrónico</Text>
+          <TextInput
             style={{
-              backgroundColor: '#ec8715',
-              padding: '5%',
-              borderRadius: 25,
-              marginTop: '5%',
-              width: 250
-            }}>
-            <Text style={{color: 'white', fontSize: 18, textAlign: 'center'}}>
-              Iniciar sesión
-            </Text>
-          </TouchableOpacity>
+              backgroundColor: 'white',
+              marginVertical: '4%',
+              paddingHorizontal: 10,
+              color: 'black',
+              borderRadius: 15,
+            }}
+            onChangeText={text => setEmail(text)} // Actualiza el estado de correo
+            value={email}
+          />
+          <Text style={{fontSize: 18, color: 'white'}}>Contraseña</Text>
+          <TextInput
+            style={{
+              color: 'black',
+              backgroundColor: 'white',
+              marginVertical: '4%',
+              paddingHorizontal: 10,
+              borderRadius: 15,
+            }}
+            secureTextEntry
+            onChangeText={text => setPassword(text)} // Actualiza el estado de contraseña
+            value={password}
+          />
+          <View style={{alignItems: 'center'}}>
+            <TouchableOpacity
+              onPress={handleLogin} // Llama a handleLogin al presionar
+              style={{
+                backgroundColor: '#ec8715',
+                padding: '5%',
+                borderRadius: 25,
+                marginTop: '5%',
+                width: 250,
+              }}>
+              <Text style={{color: 'white', fontSize: 18, textAlign: 'center'}}>
+                Iniciar sesión
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </>
   );
 }

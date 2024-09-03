@@ -52,7 +52,7 @@ export default function Alerta() {
     }
   }, [alertId]);
   if (mapa) {
-    return <Mapa setMapa={mapa} />;
+    return <Mapa setMapa={setMapa} />;
   }
 
   return (

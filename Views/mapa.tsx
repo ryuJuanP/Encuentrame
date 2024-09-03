@@ -1,15 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  Linking,
-  TouchableOpacity,
+  Alert,
+  BackHandler,
   Image,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
 } from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Marker, Callout} from 'react-native-maps';
+import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
 const INITIAL_REGION = {
   latitude: 23.6345,
@@ -20,44 +23,47 @@ const INITIAL_REGION = {
 
 const icon1 = require('../assets/images/ICONO.png');
 
-export default function Mapa() {
+export default function Mapa({setMapa}) {
   const [information, setInformation] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const url = 'https://encuentra-me.com/api/v1/markers/Prospektec-000-C5';
+  useEffect(() => {
+    const handleBackPress = () => {
+      setMapa(); // Regresa a la vista anterior
+      return true; // Indica que el evento ha sido manejado
+    };
 
-  // Memoriza los datos de los marcadores
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-  const fetchData = async () => {
-    try {
-      const device_id = await AsyncStorage.getItem('device_id');
-      const url = `https://encuentra-me.com/api/v1/markers/${device_id}`;
-      if (device_id) {
-        axios
-          .get(url)
-          .then(response => {
-            console.log(response.data);
-            setInformation(response.data);
-          })
-          .catch(error => {
-            console.error('There was a problem with the axios request:', error);
-            setError(error);
-          });
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+  }, [setMapa]);
 
-        const response = await axios.get(url);
-        console.log(response.data);
-        setInformation(response.data);
-      } else {
-        console.error('Device ID not found');
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const device_id = await AsyncStorage.getItem('device_id');
+        const url = `https://encuentra-me.com/api/v1/markers/${device_id}`;
+        if (device_id) {
+          const response = await axios.get(url);
+          console.log(response.data);
+          setInformation(response.data);
+        } else {
+          console.error('Device ID not found');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError(error);
+      } finally {
+        setLoading(false);
+        Alert.alert('Alerta emitida correctamente.');
       }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError(error);
-    }
-  };
+    };
 
-  fetchData(), [];
+    fetchData();
+  }, []);
+
   const markers = useMemo(() => {
     if (information && Array.isArray(information) && information.length > 0) {
       return information.map((item, index) => ({
@@ -67,12 +73,20 @@ export default function Mapa() {
           latitude: item.position?.lat || INITIAL_REGION.latitude,
           longitude: item.position?.lng || INITIAL_REGION.longitude,
         },
-        description: item.content?.beneficiary || 'Sin titulo',
+        description: item.content?.beneficiary || 'Sin título',
         icon: icon1,
       }));
     }
     return [];
   }, [information]);
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   if (error) {
     return (
@@ -82,7 +96,6 @@ export default function Mapa() {
     );
   }
 
-  // whatssap Button
   const openWhatsApp = () => {
     const phoneNumber = '+1234567890'; // Reemplaza con el número de teléfono
     const message = 'Hola, necesito ayuda con la ubicación.';
@@ -108,11 +121,13 @@ export default function Mapa() {
   return (
     <View style={{flex: 1}}>
       <MapView
-        style={StyleSheet.absoluteFill}
+        style={{flex: 1}}
         provider={PROVIDER_GOOGLE}
         initialRegion={INITIAL_REGION}
-        showsUserLocation
-        showsMyLocationButton>
+        followsUserLocation={true}
+        showsMyLocationButton={true}
+        showsUserLocation={true}
+        showsCompass={true}>
         {markers.map(marker => (
           <Marker
             key={marker.id}
@@ -123,8 +138,8 @@ export default function Mapa() {
             <Callout>
               <View
                 style={{
-                  height: 70,
-                  width: 200,
+                  height: 140,
+                  width: 240,
                   alignItems: 'center',
                   padding: '5%',
                 }}>
@@ -135,11 +150,17 @@ export default function Mapa() {
           </Marker>
         ))}
       </MapView>
-      <View style={{alignItems: 'flex-start', justifyContent:'flex-end', height:'100%'}}>
+      <View
+        style={{
+          position: 'absolute',
+          alignItems: 'flex-start',
+          justifyContent: 'flex-end',
+          height: '98%',
+        }}>
         <TouchableOpacity onPress={openWhatsApp}>
           <Image
             source={require('../assets/images/whatssap.png')}
-            style={{height: 90, width: 90}}
+            style={{height: 90, width: 60}}
           />
         </TouchableOpacity>
       </View>
@@ -149,8 +170,15 @@ export default function Mapa() {
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loaderContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+    color: '#4faeba',
   },
 });
