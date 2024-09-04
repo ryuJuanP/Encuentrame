@@ -63,29 +63,45 @@ export default function Alerta() {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <View style={{flexDirection:'column', margin: '5%', alignItems: 'center'}}>
+      <View
+        style={{flexDirection: 'column', margin: '5%', alignItems: 'center'}}>
         <Image
-          style={{height: 100, width: 120, marginRight:'5%'}}
+          style={{height: 150, width: 210, marginRight: '5%'}}
           source={require('../assets/images/C5.png')}
         />
         <Image
-          style={{height: 50, width: 300, margin: '5%'}}
+          style={{height: 60, width: 350, margin: '5%'}}
           source={require('../assets/images/logo2.png')}
         />
       </View>
-      <View style={{alignItems: 'center'}}>
+      <View
+        style={{
+          alignItems: 'center',
+          padding: '3%',
+          margin: '10%',
+          borderRadius: 15,
+        }}>
         {error && <Text>Error: {error.message}</Text>}
         {information ? (
           <>
-            <Text style={{fontSize: 27}}>
-              {JSON.stringify(information[0]?.label?.text)}
+            <Text style={{fontSize: 27, color: 'white', textAlign: 'center'}}>
+              Dispositivo: {JSON.stringify(information[0]?.label?.text)}
             </Text>
-            <Text style={{fontSize: 25, paddingBottom: '4%'}}>
+            <Text
+              style={{
+                fontSize: 27,
+                paddingBottom: '4%',
+                color: 'white',
+                textAlign: 'center',
+              }}>
+              Beneficiario:{' '}
               {JSON.stringify(information[0]?.content?.beneficiary)}
             </Text>
           </>
         ) : (
-          <Text style={{paddingBottom: '4%'}}>Loading...</Text>
+          <Text style={{padding: '4%', fontSize: 25, color: 'white'}}>
+            Cargando...
+          </Text>
         )}
       </View>
       <View style={{alignItems: 'center'}}>
@@ -94,8 +110,9 @@ export default function Alerta() {
           style={{
             backgroundColor: '#ec8715',
             padding: '5%',
-            borderRadius: 10,
+            borderRadius: 25,
             marginBottom: '10%',
+            paddingHorizontal: '18%'
           }}>
           <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>
             Activar alerta de extravío

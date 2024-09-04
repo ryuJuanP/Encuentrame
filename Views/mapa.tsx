@@ -11,14 +11,40 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
 const INITIAL_REGION = {
-  latitude: 23.6345,
-  longitude: -102.5528,
-  latitudeDelta: 15,
-  longitudeDelta: 15,
+  latitude: 20.66682,
+  longitude: -103.39182,
+  latitudeDelta: 0.15,
+  longitudeDelta: 0.15,
+};
+
+const requestLocationPermission = async () => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Permisos de Ubicación',
+          message: 'La app necesita acceder a tu ubicación.',
+          buttonNeutral: 'Mas tarde',
+          buttonNegative: 'Cancelar',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Location permission granted');
+      } else {
+        console.log('Location permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
 };
 
 const icon1 = require('../assets/images/ICONO.png');
@@ -62,6 +88,8 @@ export default function Mapa({setMapa}) {
     };
 
     fetchData();
+
+    requestLocationPermission();
   }, []);
 
   const markers = useMemo(() => {
@@ -83,7 +111,10 @@ export default function Mapa({setMapa}) {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#ec8715" />
+        <Text style={{color: 'white'}}>
+          Enviando Alerta. Cargando ubicación en el mapa.
+        </Text>
       </View>
     );
   }
@@ -121,8 +152,8 @@ export default function Mapa({setMapa}) {
   return (
     <View style={{flex: 1}}>
       <MapView
-        style={{flex: 1}}
         provider={PROVIDER_GOOGLE}
+        style={StyleSheet.absoluteFillObject}
         initialRegion={INITIAL_REGION}
         followsUserLocation={true}
         showsMyLocationButton={true}
@@ -135,16 +166,22 @@ export default function Mapa({setMapa}) {
             title={marker.title}
             description={marker.description}
             icon={marker.icon}>
-            <Callout>
-              <View
-                style={{
-                  height: 140,
-                  width: 240,
-                  alignItems: 'center',
-                  padding: '5%',
-                }}>
-                <Text style={{color: 'black'}}>{marker.title}</Text>
-                <Text style={{color: 'black'}}>{marker.description}</Text>
+            <Callout
+              style={{
+                height: 140,
+                width: 240,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#ec8715',
+                borderRadius: 15,
+              }}>
+              <View>
+                <Text style={{color: 'white', fontSize: 20}}>
+                  {marker.title}
+                </Text>
+                <Text style={{color: 'white', fontSize: 20}}>
+                  {marker.description}
+                </Text>
               </View>
             </Callout>
           </Marker>
@@ -178,7 +215,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#4faeba',
     color: '#4faeba',
   },
 });

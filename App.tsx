@@ -8,6 +8,8 @@ import {
   Alert,
   ImageBackground,
   StatusBar,
+  ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import axios from 'axios';
 import Alerta from './Views/alerta';
@@ -18,6 +20,7 @@ export default function App() {
   const [email, setEmail] = useState(''); // Estado para el correo electrónico
   const [password, setPassword] = useState(''); // Estado para la contraseña
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -38,7 +41,7 @@ export default function App() {
     const baseUrl = 'https://encuentra-me.com';
     const endpoint = '/api/v1/login';
     const url = `${baseUrl}${endpoint}`;
-
+    setLoading(true);
     axios
       .post(url, {email, password})
       .then(async response => {
@@ -50,13 +53,26 @@ export default function App() {
             response.data.marker.device_id,
           );
           await AsyncStorage.setItem('isLoggedIn', 'true');
-        } catch (error) {} // Cambia el estado para mostrar la vista de alerta
+        } catch (error) {
+        } finally {
+          setLoading(false); // Desactiva el estado de carga
+        } // Cambia el estado para mostrar la vista de alerta
       })
       .catch(error => {
         Alert.alert('Error', 'Usuario o contraseña incorrectos.');
         console.error('POST Error:', error);
+        setLoading(false);
       });
   };
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#ec8715" />
+        <Text style={{color: 'white'}}>Iniciando sesión</Text>
+      </View>
+    );
+  }
 
   if (alerta) {
     return <Alerta setAlerta={setAlerta} />;
@@ -78,6 +94,7 @@ export default function App() {
             source={require('./assets/images/Diseños/ENCUENTRA_ME_LOGO_1.png')}
           />
           <Text style={{fontSize: 18, color: 'white'}}>Correo electrónico</Text>
+
           <TextInput
             style={{
               backgroundColor: 'white',
@@ -85,6 +102,7 @@ export default function App() {
               paddingHorizontal: 10,
               color: 'black',
               borderRadius: 15,
+              height: '13%',
             }}
             onChangeText={text => setEmail(text)} // Actualiza el estado de correo
             value={email}
@@ -97,6 +115,7 @@ export default function App() {
               marginVertical: '4%',
               paddingHorizontal: 10,
               borderRadius: 15,
+              height: '13%',
             }}
             secureTextEntry
             onChangeText={text => setPassword(text)} // Actualiza el estado de contraseña
@@ -112,7 +131,13 @@ export default function App() {
                 marginTop: '5%',
                 width: 250,
               }}>
-              <Text style={{color: 'white', fontSize: 18, textAlign: 'center'}}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 18,
+                  textAlign: 'center',
+                  fontFamily: 'Montserrat-black.ttf',
+                }}>
                 Iniciar sesión
               </Text>
             </TouchableOpacity>
@@ -122,3 +147,13 @@ export default function App() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#4faeba',
+    color: '#4faeba',
+  },
+});
