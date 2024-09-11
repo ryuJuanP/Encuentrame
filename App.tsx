@@ -14,6 +14,7 @@ import {
 import axios from 'axios';
 import Alerta from './Views/alerta';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default function App() {
   const [alerta, setAlerta] = useState(false);
@@ -93,34 +94,58 @@ export default function App() {
             style={{height: 130, width: 350, marginBottom: '6%'}}
             source={require('./assets/images/Diseños/ENCUENTRA_ME_LOGO_1.png')}
           />
-          <Text style={{fontSize: 18, color: 'white'}}>Correo electrónico</Text>
+          <Text
+            style={{
+              fontSize: 18,
+              color: 'white',
+              fontFamily: 'Montserrat-Regular',
+            }}>
+            Correo electrónico
+          </Text>
+          <LinearGradient
+            style={{
+              backgroundColor: 'white',
+              marginVertical: '4%',
+              paddingHorizontal: 10,
+              borderRadius: 30,
+              height: '13%',
+            }}
+            colors={['#00e0ff', '#00baff']}
+            start={{x: 0.5, y: 0}}
+            end={{x: 0.1, y: 0}}>
+            <TextInput
+              style={{}}
+              onChangeText={text => setEmail(text)} // Actualiza el estado de correo
+              value={email}
+            />
+          </LinearGradient>
+          <Text
+            style={{
+              fontSize: 18,
+              color: 'white',
+              fontFamily: 'Montserrat-Regular',
+            }}>
+            Contraseña
+          </Text>
 
-          <TextInput
+          <LinearGradient
             style={{
               backgroundColor: 'white',
               marginVertical: '4%',
               paddingHorizontal: 10,
-              color: 'black',
-              borderRadius: 15,
+              borderRadius: 30,
               height: '13%',
             }}
-            onChangeText={text => setEmail(text)} // Actualiza el estado de correo
-            value={email}
-          />
-          <Text style={{fontSize: 18, color: 'white'}}>Contraseña</Text>
-          <TextInput
-            style={{
-              color: 'black',
-              backgroundColor: 'white',
-              marginVertical: '4%',
-              paddingHorizontal: 10,
-              borderRadius: 15,
-              height: '13%',
-            }}
-            secureTextEntry
-            onChangeText={text => setPassword(text)} // Actualiza el estado de contraseña
-            value={password}
-          />
+            colors={['#00e0ff', '#00baff']}
+            start={{x: 0.5, y: 0}}
+            end={{x: 0.1, y: 0}}>
+            <TextInput
+              style={{backgroundColor: 'transparent', opacity: 1}}
+              secureTextEntry
+              onChangeText={text => setPassword(text)} // Actualiza el estado de contraseña
+              value={password}
+            />
+          </LinearGradient>
           <View style={{alignItems: 'center'}}>
             <TouchableOpacity
               onPress={handleLogin} // Llama a handleLogin al presionar
@@ -136,7 +161,7 @@ export default function App() {
                   color: 'white',
                   fontSize: 18,
                   textAlign: 'center',
-                  fontFamily: 'Montserrat-black.ttf',
+                  fontFamily: 'Montserrat-Black',
                 }}>
                 Iniciar sesión
               </Text>

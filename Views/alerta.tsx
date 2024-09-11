@@ -84,7 +84,13 @@ export default function Alerta() {
         {error && <Text>Error: {error.message}</Text>}
         {information ? (
           <>
-            <Text style={{fontSize: 27, color: 'white', textAlign: 'center'}}>
+            <Text
+              style={{
+                fontSize: 27,
+                color: 'white',
+                textAlign: 'center',
+                fontFamily: 'Montserrat-Black',
+              }}>
               Dispositivo: {JSON.stringify(information[0]?.label?.text)}
             </Text>
             <Text
@@ -93,13 +99,20 @@ export default function Alerta() {
                 paddingBottom: '4%',
                 color: 'white',
                 textAlign: 'center',
+                fontFamily: 'Montserrat-Regular',
               }}>
               Beneficiario:{' '}
               {JSON.stringify(information[0]?.content?.beneficiary)}
             </Text>
           </>
         ) : (
-          <Text style={{padding: '4%', fontSize: 25, color: 'white'}}>
+          <Text
+            style={{
+              padding: '4%',
+              fontSize: 25,
+              color: 'white',
+              fontFamily: 'Montserrat-Regular',
+            }}>
             Cargando...
           </Text>
         )}
@@ -112,9 +125,15 @@ export default function Alerta() {
             padding: '5%',
             borderRadius: 25,
             marginBottom: '10%',
-            paddingHorizontal: '18%'
+            paddingHorizontal: '18%',
           }}>
-          <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 20,
+              textAlign: 'center',
+              fontFamily: 'Montserrat-Black',
+            }}>
             Activar alerta de extravío
           </Text>
         </TouchableOpacity>

@@ -23,6 +23,8 @@ const INITIAL_REGION = {
   longitudeDelta: 0.15,
 };
 
+const mapStyle = require('../assets/mapStyles.json');
+
 const requestLocationPermission = async () => {
   if (Platform.OS === 'android') {
     try {
@@ -127,26 +129,10 @@ export default function Mapa({setMapa}) {
     );
   }
 
-  const openWhatsApp = () => {
-    const phoneNumber = '+1234567890'; // Reemplaza con el número de teléfono
-    const message = 'Hola, necesito ayuda con la ubicación.';
-
-    const url = `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(
-      message,
-    )}`;
-
-    Linking.canOpenURL(url)
-      .then(supported => {
-        if (supported) {
-          return Linking.openURL(url);
-        } else {
-          Alert.alert(
-            'WhatsApp no está instalado',
-            'Parece que no tienes WhatsApp instalado en tu dispositivo.',
-          );
-        }
-      })
-      .catch(err => console.error('Error al abrir WhatsApp:', err));
+  const openWhatsAppPress = async () => {
+    await Linking.openURL(
+      'https://wa.me/+523324135315/?text=¡Hola! Quisiera ayuda con la aplicación.',
+    );
   };
 
   return (
@@ -158,7 +144,8 @@ export default function Mapa({setMapa}) {
         followsUserLocation={true}
         showsMyLocationButton={true}
         showsUserLocation={true}
-        showsCompass={true}>
+        showsCompass={true}
+        customMapStyle={mapStyle}>
         {markers.map(marker => (
           <Marker
             key={marker.id}
@@ -167,19 +154,33 @@ export default function Mapa({setMapa}) {
             description={marker.description}
             icon={marker.icon}>
             <Callout
+              tooltip={true}
               style={{
-                height: 140,
-                width: 240,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#ec8715',
-                borderRadius: 15,
+                backgroundColor: 'transparent',
               }}>
-              <View>
-                <Text style={{color: 'white', fontSize: 20}}>
+              <View
+                style={{
+                  height: 140,
+                  width: 240,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#ec8715',
+                  borderRadius: 15,
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 20,
+                    fontFamily: 'Montserrat-Black',
+                  }}>
                   {marker.title}
                 </Text>
-                <Text style={{color: 'white', fontSize: 20}}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 20,
+                    fontFamily: 'Montserrat-Regular',
+                  }}>
                   {marker.description}
                 </Text>
               </View>
@@ -194,7 +195,7 @@ export default function Mapa({setMapa}) {
           justifyContent: 'flex-end',
           height: '98%',
         }}>
-        <TouchableOpacity onPress={openWhatsApp}>
+        <TouchableOpacity onPress={openWhatsAppPress}>
           <Image
             source={require('../assets/images/whatssap.png')}
             style={{height: 90, width: 60}}
