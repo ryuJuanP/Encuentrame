@@ -14,7 +14,7 @@ import {
 import axios from 'axios';
 import Alerta from './Views/alerta';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LinearGradient from 'react-native-linear-gradient';
+import CheckBox from '@react-native-community/checkbox';
 
 export default function App() {
   const [alerta, setAlerta] = useState(false);
@@ -23,20 +23,20 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
-        if (loggedInStatus === 'true') {
-          setIsLoggedIn(true);
-        }
-      } catch (error) {
-        console.error('Error checking login status:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const checkLoginStatus = async () => {
+  //     try {
+  //       const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
+  //       if (loggedInStatus === 'true') {
+  //         setIsLoggedIn(true);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error checking login status:', error);
+  //     }
+  //   };
 
-    checkLoginStatus();
-  }, []);
+  //   checkLoginStatus();
+  // }, []);
 
   const handleLogin = () => {
     const baseUrl = 'https://encuentra-me.com';
@@ -89,7 +89,7 @@ export default function App() {
       <ImageBackground
         style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
         source={require('./assets/images/fondo.jpg')}>
-        <View>
+        <View style={{margin: '5%'}}>
           <Image
             style={{height: 130, width: 350, marginBottom: '6%'}}
             source={require('./assets/images/Diseños/ENCUENTRA_ME_LOGO_1.png')}
@@ -102,23 +102,22 @@ export default function App() {
             }}>
             Correo electrónico
           </Text>
-          <LinearGradient
+
+          <TextInput
             style={{
               backgroundColor: 'white',
               marginVertical: '4%',
               paddingHorizontal: 10,
               borderRadius: 30,
-              height: '13%',
+              height: '10%',
+              color: 'black',
+              fontSize: 18,
             }}
-            colors={['#00e0ff', '#00baff']}
-            start={{x: 0.5, y: 0}}
-            end={{x: 0.1, y: 0}}>
-            <TextInput
-              style={{}}
-              onChangeText={text => setEmail(text)} // Actualiza el estado de correo
-              value={email}
-            />
-          </LinearGradient>
+            autoCapitalize="none"
+            onChangeText={text => setEmail(text)} // Actualiza el estado de correo
+            value={email}
+          />
+
           <Text
             style={{
               fontSize: 18,
@@ -128,24 +127,29 @@ export default function App() {
             Contraseña
           </Text>
 
-          <LinearGradient
+          <TextInput
             style={{
               backgroundColor: 'white',
               marginVertical: '4%',
               paddingHorizontal: 10,
               borderRadius: 30,
-              height: '13%',
+              height: '10%',
+              color: 'black',
+              fontSize: 18,
             }}
-            colors={['#00e0ff', '#00baff']}
-            start={{x: 0.5, y: 0}}
-            end={{x: 0.1, y: 0}}>
-            <TextInput
-              style={{backgroundColor: 'transparent', opacity: 1}}
-              secureTextEntry
-              onChangeText={text => setPassword(text)} // Actualiza el estado de contraseña
-              value={password}
-            />
-          </LinearGradient>
+            autoCapitalize="none"
+            secureTextEntry
+            onChangeText={text => setPassword(text)} // Actualiza el estado de contraseña
+            value={password}
+          />
+
+          <View style={{flexDirection: 'row', margin: '2%'}}>
+            <CheckBox />
+            <Text>
+              He leído, entiendo y acepto los términos y condiciones y politica
+              de privacidad del uso de la plataforma
+            </Text>
+          </View>
           <View style={{alignItems: 'center'}}>
             <TouchableOpacity
               onPress={handleLogin} // Llama a handleLogin al presionar
