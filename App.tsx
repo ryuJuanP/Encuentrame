@@ -196,10 +196,11 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: 'white',
+    color: 'black',
     height: 50,
     margin: 0,
     marginTop: 5,
-    padding: 'auto',
+    padding: 10,
     marginBottom: 5,
     borderWidth: 1,
     borderRadius: 12,
