@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -10,33 +12,34 @@ import {
   StatusBar,
   ActivityIndicator,
   StyleSheet,
+  SafeAreaView,
+  Button,
 } from 'react-native';
 import axios from 'axios';
 import Alerta from './Views/alerta';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CheckBox from '@react-native-community/checkbox';
 
 export default function App() {
   const [alerta, setAlerta] = useState(false);
-  const [email, setEmail] = useState(''); // Estado para el correo electrónico
-  const [password, setPassword] = useState(''); // Estado para la contraseña
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     try {
-  //       const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
-  //       if (loggedInStatus === 'true') {
-  //         setIsLoggedIn(true);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error checking login status:', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
+        if (loggedInStatus === 'true') {
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    };
 
-  //   checkLoginStatus();
-  // }, []);
+    checkLoginStatus();
+  }, []);
 
   const handleLogin = () => {
     const baseUrl = 'https://encuentra-me.com';
@@ -70,7 +73,18 @@ export default function App() {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="#ec8715" />
-        <Text style={{color: 'white'}}>Iniciando sesión</Text>
+        <Text
+          style={{
+            color: 'white',
+            fontFamily: 'Montserrat-Regular',
+            textShadowColor: 'black',
+            textShadowOffset: {width: -1, height: 0},
+            textShadowRadius: 10,
+            fontSize: 26,
+            fontWeight: '800',
+          }}>
+          Iniciando sesión
+        </Text>
       </View>
     );
   }
@@ -80,7 +94,7 @@ export default function App() {
   }
 
   if (isLoggedIn) {
-    return <Alerta setAlerta={setAlerta} />; // Suponiendo que Alerta es la vista principal
+    return <Alerta setAlerta={setAlerta} />;
   }
 
   return (
@@ -89,88 +103,83 @@ export default function App() {
       <ImageBackground
         style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
         source={require('./assets/images/fondo.jpg')}>
-        <View style={{margin: '5%'}}>
+        <View>
           <Image
-            style={{height: 130, width: 350, marginBottom: '6%'}}
+            style={{
+              zIndex: 999,
+              height: 140,
+              width: 350,
+              marginBottom: '6%',
+            }}
             source={require('./assets/images/Diseños/ENCUENTRA_ME_LOGO_1.png')}
           />
-          <Text
-            style={{
-              fontSize: 18,
-              color: 'white',
-              fontFamily: 'Montserrat-Regular',
-            }}>
-            Correo electrónico
-          </Text>
-
-          <TextInput
-            style={{
-              backgroundColor: 'white',
-              marginVertical: '4%',
-              paddingHorizontal: 10,
-              borderRadius: 30,
-              height: '10%',
-              color: 'black',
-              fontSize: 18,
-            }}
-            autoCapitalize="none"
-            onChangeText={text => setEmail(text)} // Actualiza el estado de correo
-            value={email}
-          />
-
-          <Text
-            style={{
-              fontSize: 18,
-              color: 'white',
-              fontFamily: 'Montserrat-Regular',
-            }}>
-            Contraseña
-          </Text>
-
-          <TextInput
-            style={{
-              backgroundColor: 'white',
-              marginVertical: '4%',
-              paddingHorizontal: 10,
-              borderRadius: 30,
-              height: '10%',
-              color: 'black',
-              fontSize: 18,
-            }}
-            autoCapitalize="none"
-            secureTextEntry
-            onChangeText={text => setPassword(text)} // Actualiza el estado de contraseña
-            value={password}
-          />
-
-          <View style={{flexDirection: 'row', margin: '2%'}}>
-            <CheckBox />
-            <Text>
-              He leído, entiendo y acepto los términos y condiciones y politica
-              de privacidad del uso de la plataforma
-            </Text>
-          </View>
-          <View style={{alignItems: 'center'}}>
-            <TouchableOpacity
-              onPress={handleLogin} // Llama a handleLogin al presionar
+          <SafeAreaView>
+            <Text
               style={{
-                backgroundColor: '#ec8715',
-                padding: '5%',
-                borderRadius: 25,
-                marginTop: '5%',
-                width: 250,
+                color: 'white',
+                fontFamily: 'Montserrat-Regular',
+                textShadowColor: 'black',
+                textShadowOffset: {width: -1, height: 0},
+                textShadowRadius: 10,
+                fontSize: 20,
+                fontWeight: '800',
               }}>
-              <Text
+              Correo electrónico
+            </Text>
+
+            <TextInput
+              style={styles.input}
+              inputMode="email"
+              onChangeText={text => setEmail(text)}
+              value={email}
+              autoCapitalize="none"
+            />
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'Montserrat-Regular',
+                textShadowColor: 'black',
+                textShadowOffset: {width: -1, height: 0},
+                textShadowRadius: 10,
+                fontSize: 20,
+                fontWeight: '800',
+              }}>
+              Contraseña
+            </Text>
+            <TextInput
+              style={styles.input}
+              secureTextEntry
+              inputMode="text"
+              autoCapitalize="none"
+              onChangeText={text => setPassword(text)}
+              value={password}
+            />
+            <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                onPress={handleLogin}
                 style={{
-                  color: 'white',
-                  fontSize: 18,
-                  textAlign: 'center',
-                  fontFamily: 'Montserrat-Black',
+                  backgroundColor: '#ec8715',
+                  padding: '5%',
+                  borderRadius: 25,
+                  marginTop: '5%',
+                  width: 250,
                 }}>
-                Iniciar sesión
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{
+                    color: 'white',
+                    textAlign: 'center',
+                    fontFamily: 'Montserrat-Regular',
+                    textShadowColor: 'black',
+                    textShadowOffset: {width: -1, height: 0},
+                    textShadowRadius: 10,
+                    fontSize: 22,
+                    fontWeight: '800',
+                  }}>
+                  Iniciar sesión
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
         </View>
       </ImageBackground>
     </>
@@ -185,4 +194,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#4faeba',
     color: '#4faeba',
   },
+  input: {
+    backgroundColor: 'white',
+    color: 'black',
+    height: 50,
+    margin: 0,
+    marginTop: 5,
+    padding: 10,
+    marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 12,
+    fontSize: 18,
+  },
 });
+
