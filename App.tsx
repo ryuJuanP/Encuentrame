@@ -10,6 +10,7 @@ import {
   StatusBar,
   ActivityIndicator,
   StyleSheet,
+  Linking,
 } from 'react-native';
 import axios from 'axios';
 import Alerta from './Views/alerta';
@@ -22,21 +23,34 @@ export default function App() {
   const [password, setPassword] = useState(''); // Estado para la contraseña
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     try {
-  //       const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
-  //       if (loggedInStatus === 'true') {
-  //         setIsLoggedIn(true);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error checking login status:', error);
-  //     }
-  //   };
+  const openTermsAndConditions = () => {
+    Linking.openURL(
+      'https://encuentra-me.com/legal/T%C3%A9rminos%20y%20Condiciones%20del%20Uso%20de%20la%20Plataforma.pdf',
+    );
+  };
 
-  //   checkLoginStatus();
-  // }, []);
+  const openPrivacyPolicy = () => {
+    Linking.openURL(
+      'https://encuentra-me.com/legal/Aviso%20de%20Privacidad.pdf',
+    );
+  };
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const loggedInStatus = await AsyncStorage.getItem('isLoggedIn');
+        if (loggedInStatus === 'true') {
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   const handleLogin = () => {
     const baseUrl = 'https://encuentra-me.com';
@@ -89,7 +103,7 @@ export default function App() {
       <ImageBackground
         style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
         source={require('./assets/images/fondo.jpg')}>
-        <View style={{margin: '5%'}}>
+        <View style={{margin: '5%', alignContent: 'center'}}>
           <Image
             style={{height: 130, width: 350, marginBottom: '6%'}}
             source={require('./assets/images/Diseños/ENCUENTRA_ME_LOGO_1.png')}
@@ -143,11 +157,27 @@ export default function App() {
             value={password}
           />
 
-          <View style={{flexDirection: 'row', margin: '2%'}}>
-            <CheckBox />
+          <View style={{flexDirection: 'row'}}>
+            <CheckBox
+              value={isChecked}
+              onValueChange={setIsChecked}
+              boxType="square"
+              tintColors={{true: '#00f', false: '#000'}}
+            />
             <Text>
-              He leído, entiendo y acepto los términos y condiciones y politica
-              de privacidad del uso de la plataforma
+              He leído, entiendo y acepto los{' '}
+              <TouchableOpacity onPress={openTermsAndConditions}>
+                <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+                  términos y condiciones
+                </Text>
+              </TouchableOpacity>{' '}
+              y la{' '}
+              <TouchableOpacity onPress={openPrivacyPolicy}>
+                <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+                  política de privacidad
+                </Text>
+              </TouchableOpacity>{' '}
+              del uso de la plataforma.
             </Text>
           </View>
           <View style={{alignItems: 'center'}}>
