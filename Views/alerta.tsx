@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-catch-shadow */
 import React, {useState, useEffect, useMemo} from 'react';
 import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
 import axios from 'axios';
@@ -59,12 +57,12 @@ export default function Alerta() {
     <View
       style={{
         backgroundColor: '#4faeba',
-        flex: 1,
+        flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        paddingHorizontal: 15,
       }}>
-      <View
-        style={{flexDirection: 'column', margin: '5%', alignItems: 'center'}}>
+      <View style={{flexDirection: 'column', margin: 5, alignItems: 'center'}}>
         <Image
           style={{height: 150, width: 210, marginRight: '5%'}}
           source={require('../assets/images/C5.png')}
@@ -78,7 +76,7 @@ export default function Alerta() {
         style={{
           alignItems: 'center',
           padding: '3%',
-          margin: '10%',
+          margin: '5%',
           borderRadius: 15,
         }}>
         {error && <Text>Error: {error.message}</Text>}
@@ -86,12 +84,14 @@ export default function Alerta() {
           <>
             <Text
               style={{
-                fontSize: 27,
+                fontSize: 26,
                 color: 'white',
                 textAlign: 'center',
                 fontFamily: 'Montserrat-Black',
+                paddingBottom: 15,
               }}>
-              Dispositivo: {JSON.stringify(information[0]?.label?.text)}
+              Dispositivo:
+              {`${'\n'}${JSON.stringify(information[0]?.label?.text)}`}
             </Text>
             <Text
               style={{
@@ -101,8 +101,8 @@ export default function Alerta() {
                 textAlign: 'center',
                 fontFamily: 'Montserrat-Regular',
               }}>
-              Beneficiario:{' '}
-              {JSON.stringify(information[0]?.content?.beneficiary)}
+              Beneficiario:
+              {`${'\n'}${JSON.stringify(information[0]?.content?.beneficiary)}`}
             </Text>
           </>
         ) : (
@@ -130,9 +130,13 @@ export default function Alerta() {
           <Text
             style={{
               color: 'white',
-              fontSize: 20,
               textAlign: 'center',
-              fontFamily: 'Montserrat-Black',
+              fontFamily: 'Montserrat-Regular',
+              textShadowColor: 'black',
+              textShadowOffset: {width: -1, height: 0},
+              textShadowRadius: 10,
+              fontSize: 22,
+              fontWeight: '800',
             }}>
             Activar alerta de extravío
           </Text>

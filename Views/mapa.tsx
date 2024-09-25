@@ -114,8 +114,17 @@ export default function Mapa({setMapa}) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="#ec8715" />
-        <Text style={{color: 'white'}}>
-          Enviando Alerta. Cargando ubicación en el mapa.
+        <Text
+          style={{
+            color: 'white',
+            fontFamily: 'Montserrat-Regular',
+            textShadowColor: 'black',
+            textShadowOffset: {width: -1, height: 0},
+            textShadowRadius: 10,
+            fontSize: 26,
+            fontWeight: '800',
+          }}>
+          Enviando Alerta.{'\n'}Cargando ubicación en el mapa.
         </Text>
       </View>
     );

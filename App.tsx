@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -10,16 +12,17 @@ import {
   StatusBar,
   ActivityIndicator,
   StyleSheet,
+  SafeAreaView,
+  Button,
 } from 'react-native';
 import axios from 'axios';
 import Alerta from './Views/alerta';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LinearGradient from 'react-native-linear-gradient';
 
 export default function App() {
   const [alerta, setAlerta] = useState(false);
-  const [email, setEmail] = useState(''); // Estado para el correo electrónico
-  const [password, setPassword] = useState(''); // Estado para la contraseña
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -70,7 +73,18 @@ export default function App() {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="#ec8715" />
-        <Text style={{color: 'white'}}>Iniciando sesión</Text>
+        <Text
+          style={{
+            color: 'white',
+            fontFamily: 'Montserrat-Regular',
+            textShadowColor: 'black',
+            textShadowOffset: {width: -1, height: 0},
+            textShadowRadius: 10,
+            fontSize: 26,
+            fontWeight: '800',
+          }}>
+          Iniciando sesión
+        </Text>
       </View>
     );
   }
@@ -80,7 +94,7 @@ export default function App() {
   }
 
   if (isLoggedIn) {
-    return <Alerta setAlerta={setAlerta} />; // Suponiendo que Alerta es la vista principal
+    return <Alerta setAlerta={setAlerta} />;
   }
 
   return (
@@ -91,82 +105,81 @@ export default function App() {
         source={require('./assets/images/fondo.jpg')}>
         <View>
           <Image
-            style={{height: 130, width: 350, marginBottom: '6%'}}
+            style={{
+              zIndex: 999,
+              height: 140,
+              width: 350,
+              marginBottom: '6%',
+            }}
             source={require('./assets/images/Diseños/ENCUENTRA_ME_LOGO_1.png')}
           />
-          <Text
-            style={{
-              fontSize: 18,
-              color: 'white',
-              fontFamily: 'Montserrat-Regular',
-            }}>
-            Correo electrónico
-          </Text>
-          <LinearGradient
-            style={{
-              backgroundColor: 'white',
-              marginVertical: '4%',
-              paddingHorizontal: 10,
-              borderRadius: 30,
-              height: '13%',
-            }}
-            colors={['#00e0ff', '#00baff']}
-            start={{x: 0.5, y: 0}}
-            end={{x: 0.1, y: 0}}>
-            <TextInput
-              style={{}}
-              onChangeText={text => setEmail(text)} // Actualiza el estado de correo
-              value={email}
-            />
-          </LinearGradient>
-          <Text
-            style={{
-              fontSize: 18,
-              color: 'white',
-              fontFamily: 'Montserrat-Regular',
-            }}>
-            Contraseña
-          </Text>
+          <SafeAreaView>
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'Montserrat-Regular',
+                textShadowColor: 'black',
+                textShadowOffset: {width: -1, height: 0},
+                textShadowRadius: 10,
+                fontSize: 20,
+                fontWeight: '800',
+              }}>
+              Correo electrónico
+            </Text>
 
-          <LinearGradient
-            style={{
-              backgroundColor: 'white',
-              marginVertical: '4%',
-              paddingHorizontal: 10,
-              borderRadius: 30,
-              height: '13%',
-            }}
-            colors={['#00e0ff', '#00baff']}
-            start={{x: 0.5, y: 0}}
-            end={{x: 0.1, y: 0}}>
             <TextInput
-              style={{backgroundColor: 'transparent', opacity: 1}}
+              style={styles.input}
+              inputMode="email"
+              onChangeText={text => setEmail(text)}
+              value={email}
+              autoCapitalize="none"
+            />
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: 'Montserrat-Regular',
+                textShadowColor: 'black',
+                textShadowOffset: {width: -1, height: 0},
+                textShadowRadius: 10,
+                fontSize: 20,
+                fontWeight: '800',
+              }}>
+              Contraseña
+            </Text>
+            <TextInput
+              style={styles.input}
               secureTextEntry
-              onChangeText={text => setPassword(text)} // Actualiza el estado de contraseña
+              inputMode="text"
+              autoCapitalize="none"
+              onChangeText={text => setPassword(text)}
               value={password}
             />
-          </LinearGradient>
-          <View style={{alignItems: 'center'}}>
-            <TouchableOpacity
-              onPress={handleLogin} // Llama a handleLogin al presionar
-              style={{
-                backgroundColor: '#ec8715',
-                padding: '5%',
-                borderRadius: 25,
-                marginTop: '5%',
-                width: 250,
-              }}>
-              <Text
+            <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                onPress={handleLogin}
                 style={{
-                  color: 'white',
-                  fontSize: 18,
-                  textAlign: 'center',
-                  fontFamily: 'Montserrat-Black',
+                  backgroundColor: '#ec8715',
+                  padding: '5%',
+                  borderRadius: 25,
+                  marginTop: '5%',
+                  width: 250,
                 }}>
-                Iniciar sesión
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={{
+                    color: 'white',
+                    textAlign: 'center',
+                    fontFamily: 'Montserrat-Regular',
+                    textShadowColor: 'black',
+                    textShadowOffset: {width: -1, height: 0},
+                    textShadowRadius: 10,
+                    fontSize: 22,
+                    fontWeight: '800',
+                  }}>
+                  Iniciar sesión
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
         </View>
       </ImageBackground>
     </>
@@ -180,5 +193,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#4faeba',
     color: '#4faeba',
+  },
+  input: {
+    backgroundColor: 'white',
+    height: 50,
+    margin: 0,
+    marginTop: 5,
+    padding: 'auto',
+    marginBottom: 5,
+    borderWidth: 1,
+    borderRadius: 12,
+    fontSize: 18,
   },
 });
