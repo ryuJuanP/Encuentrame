@@ -3,7 +3,6 @@ import axios from 'axios';
 import React, {useEffect, useMemo, useState} from 'react';
 import {
   Alert,
-  BackHandler,
   Image,
   Linking,
   StyleSheet,
@@ -15,6 +14,8 @@ import {
   Platform,
 } from 'react-native';
 import MapView, {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {BackHandler} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const INITIAL_REGION = {
   latitude: 20.66682,
@@ -51,22 +52,28 @@ const requestLocationPermission = async () => {
 
 const icon1 = require('../assets/images/ICONO.png');
 
-export default function Mapa({setMapa}) {
+export default function Mapa({navigation}) {
   const [information, setInformation] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  // const navigation = useNavigation();
   useEffect(() => {
-    const handleBackPress = () => {
-      setMapa(); // Regresa a la vista anterior
-      return true; // Indica que el evento ha sido manejado
+    const backAction = () => {
+      if (navigation) {
+        navigation.navigate('Alerta');
+      } else {
+        BackHandler.exitApp();
+      }
+      return true;
     };
 
-    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
 
-    return () =>
-      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-  }, [setMapa]);
+    return () => backHandler.remove();
+  }, [navigation]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -114,7 +121,7 @@ export default function Mapa({setMapa}) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="#ec8715" />
-        <Text style={{color: 'white'}}>
+        <Text style={{color: 'white', fontSize: 20, textAlign:'center'}}>
           Enviando Alerta. Cargando ubicación en el mapa.
         </Text>
       </View>
@@ -136,73 +143,75 @@ export default function Mapa({setMapa}) {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={StyleSheet.absoluteFillObject}
-        initialRegion={INITIAL_REGION}
-        followsUserLocation={true}
-        showsMyLocationButton={true}
-        showsUserLocation={true}
-        showsCompass={true}
-        customMapStyle={mapStyle}>
-        {markers.map(marker => (
-          <Marker
-            key={marker.id}
-            coordinate={marker.coordinate}
-            title={marker.title}
-            description={marker.description}
-            icon={marker.icon}>
-            <Callout
-              tooltip={true}
-              style={{
-                backgroundColor: 'transparent',
-              }}>
-              <View
+    <>
+      <View style={{flex: 1}}>
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={StyleSheet.absoluteFillObject}
+          initialRegion={INITIAL_REGION}
+          followsUserLocation={true}
+          showsMyLocationButton={true}
+          showsUserLocation={true}
+          showsCompass={true}
+          customMapStyle={mapStyle}>
+          {markers.map(marker => (
+            <Marker
+              key={marker.id}
+              coordinate={marker.coordinate}
+              title={marker.title}
+              description={marker.description}
+              icon={marker.icon}>
+              <Callout
+                tooltip={true}
                 style={{
-                  height: 140,
-                  width: 240,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: '#ec8715',
-                  borderRadius: 15,
+                  backgroundColor: 'transparent',
                 }}>
-                <Text
+                <View
                   style={{
-                    color: 'white',
-                    fontSize: 20,
-                    fontFamily: 'Montserrat-Black',
+                    height: 140,
+                    width: 240,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#ec8715',
+                    borderRadius: 15,
                   }}>
-                  {marker.title}
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 20,
-                    fontFamily: 'Montserrat-Regular',
-                  }}>
-                  {marker.description}
-                </Text>
-              </View>
-            </Callout>
-          </Marker>
-        ))}
-      </MapView>
-      <View
-        style={{
-          position: 'absolute',
-          alignItems: 'flex-start',
-          justifyContent: 'flex-end',
-          height: '98%',
-        }}>
-        <TouchableOpacity onPress={openWhatsAppPress}>
-          <Image
-            source={require('../assets/images/whatssap.png')}
-            style={{height: 90, width: 60}}
-          />
-        </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 20,
+                      fontFamily: 'Montserrat-Black',
+                    }}>
+                    {marker.title}
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 20,
+                      fontFamily: 'Montserrat-Regular',
+                    }}>
+                    {marker.description}
+                  </Text>
+                </View>
+              </Callout>
+            </Marker>
+          ))}
+        </MapView>
+        <View
+          style={{
+            position: 'absolute',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-end',
+            height: '98%',
+          }}>
+          <TouchableOpacity onPress={openWhatsAppPress}>
+            <Image
+              source={require('../assets/images/whatssap.png')}
+              style={{height: 90, width: 60}}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 

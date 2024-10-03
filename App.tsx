@@ -16,8 +16,9 @@ import axios from 'axios';
 import Alerta from './Views/alerta';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from '@react-native-community/checkbox';
+import Navigation from './navigation';
 
-export default function App() {
+export default function App({na}) {
   const [alerta, setAlerta] = useState(false);
   const [email, setEmail] = useState(''); // Estado para el correo electrónico
   const [password, setPassword] = useState(''); // Estado para la contraseña
@@ -84,7 +85,9 @@ export default function App() {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="#ec8715" />
-        <Text style={{color: 'white'}}>Iniciando sesión</Text>
+        <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>
+          Iniciando sesión
+        </Text>
       </View>
     );
   }

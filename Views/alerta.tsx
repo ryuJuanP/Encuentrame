@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-catch-shadow */
 import React, {useState, useEffect, useMemo} from 'react';
-import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Mapa from './mapa';
